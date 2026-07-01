@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paiement — MonPortfolio</title>
+  <meta name="description" content="Maquette de page de paiement — démonstration uniquement, aucun paiement réel n'est traité.">
+  <meta property="og:title" content="Paiement — MonPortfolio">
+  <meta property="og:description" content="Maquette de page de paiement — démonstration uniquement, aucun paiement réel n'est traité.">
+  <meta property="og:image" content="assets/images/og-image.jpg">
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- CSS critique (above-the-fold) en inline : le header s'affiche sans attendre css/style.css.
+       Copie exacte d'un sous-ensemble de css/style.css (liste précise des règles : voir le
+       commentaire en tête de ce fichier). Toute modification doit être répercutée ICI et dans
+       les 3 autres copies : index.html, blog.html,
+       blog/construire-portfolio-avec-claude-code.html. -->
+  <style>
+    :root {
+      --color-bg: #0a0a0a;
+      --color-surface: #141414;
+      --color-border: #262626;
+      --color-text: #e0e0e0;
+      --color-muted: #8a8a8a;
+      --color-accent: #64ffda;
+      --color-header-bg: rgba(10, 10, 10, 0.85);
+      --font-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --space-md: 1.5rem;
+      --header-height: 64px;
+      --max-width: 1080px;
+    }
+    :root[data-theme="light"] {
+      --color-bg: #ffffff;
+      --color-surface: #f5f5f5;
+      --color-border: #e2e2e2;
+      --color-text: #1a1a1a;
+      --color-muted: #5a5a5a;
+      --color-accent: #0a7a5e;
+      --color-header-bg: rgba(255, 255, 255, 0.8);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: var(--color-bg); color: var(--color-text); font-family: var(--font-base); font-size: 1.1rem; line-height: 1.7; }
+    .container { width: 100%; max-width: var(--max-width); margin: 0 auto; padding-inline: var(--space-md); }
+    .header { position: sticky; top: 0; z-index: 100; background-color: var(--color-header-bg); backdrop-filter: blur(8px); border-bottom: 1px solid var(--color-border); }
+    .header__inner { display: flex; align-items: center; gap: var(--space-md); height: var(--header-height); }
+    .header__logo { margin-right: auto; font-weight: 700; letter-spacing: 0.5px; }
+    .header__logo-accent { color: var(--color-accent); }
+  </style>
+  <link rel="preload" href="css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="css/style.css"></noscript>
+</head>
+<body>
+  <main class="payment">
+    <h1 class="payment__title">Paiement</h1>
+    <p class="payment__subtitle">Finalisez votre commande en toute sécurité</p>
+
+    <section class="card">
+      <!-- Vue formulaire -->
+      <div id="form-view">
+        <div class="card__summary">
+          <span class="card__summary-label">Total à payer</span>
+          <strong class="card__total">49,00 €</strong>
+        </div>
+
+        <!-- Maquette uniquement : ce formulaire ne traite aucun paiement réel -->
+        <form id="payment-form" novalidate>
+          <div class="field">
+            <label class="field__label" for="name">Nom sur la carte</label>
+            <input class="field__input" type="text" id="name" placeholder="Jean Dupont" autocomplete="cc-name" aria-describedby="name-error">
+            <span class="field__error" data-for="name" id="name-error" role="alert">Veuillez saisir le nom figurant sur la carte.</span>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="card">Numéro de carte</label>
+            <input class="field__input" type="text" id="card" placeholder="1234 5678 9012 3456" inputmode="numeric" autocomplete="cc-number" maxlength="19" aria-describedby="card-error">
+            <span class="field__error" data-for="card" id="card-error" role="alert">Numéro de carte invalide (16 chiffres attendus).</span>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label class="field__label" for="expiry">Expiration</label>
+              <input class="field__input" type="text" id="expiry" placeholder="MM / AA" autocomplete="cc-exp" maxlength="7" aria-describedby="expiry-error">
+              <span class="field__error" data-for="expiry" id="expiry-error" role="alert">Date invalide ou expirée.</span>
+            </div>
+            <div class="field">
+              <label class="field__label" for="cvc">CVC</label>
+              <input class="field__input" type="text" id="cvc" placeholder="123" inputmode="numeric" autocomplete="cc-csc" maxlength="4" aria-describedby="cvc-error">
+              <span class="field__error" data-for="cvc" id="cvc-error" role="alert">CVC invalide (3 ou 4 chiffres).</span>
+            </div>
+          </div>
+
+          <button type="submit" class="pay-button">Payer 49,00 €</button>
+          <p class="payment__note"><span aria-hidden="true">🔒</span> Maquette de démonstration — aucun paiement réel</p>
+        </form>
+      </div>
+
+      <!-- Vue confirmation (cachée au départ) -->
+      <div id="confirmation-view" class="confirmation is-hidden" role="status">
+        <div class="confirmation__check" aria-hidden="true">✓</div>
+        <h2 class="confirmation__title">Paiement confirmé</h2>
+        <p class="confirmation__text">Merci ! Votre paiement de <strong>49,00 €</strong> a bien été enregistré.<br>Un reçu a été envoyé par e-mail.</p>
+        <p class="payment__note">(Simulation — aucun débit réel n'a eu lieu)</p>
+      </div>
+    </section>
+
+    <p class="payment__back"><a class="payment__back-link" href="index.html">&larr; Retour au portfolio</a></p>
+  </main>
+
+  <script src="js/paiement.js"></script>
+</body>
+</html>

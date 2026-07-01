@@ -1,0 +1,74 @@
+[
+  {
+    "name": "site-gcp-29",
+    "description": "Site client GCP 29 (Bloc 4 automation)",
+    "languages": [
+      "TypeScript",
+      "CSS",
+      "JavaScript"
+    ],
+    "url": "https://github.com/viviendesbois-collab/site-gcp-29",
+    "lastUpdated": "2026-06-29",
+    "stars": 0
+  },
+  {
+    "name": "site-fleuriste-camelia-223342",
+    "description": "Site client Fleuriste Camelia 223342 (Bloc 4 automation)",
+    "languages": [
+      "TypeScript",
+      "CSS",
+      "JavaScript"
+    ],
+    "url": "https://github.com/viviendesbois-collab/site-fleuriste-camelia-223342",
+    "lastUpdated": "2026-06-29",
+    "stars": 0
+  },
+  {
+    "name": "site-boucherie-lefevre-223016",
+    "description": "Site client Boucherie Lefevre 223016 (Bloc 4 automation)",
+    "languages": [
+      "TypeScript",
+      "CSS",
+      "JavaScript"
+    ],
+    "url": "https://github.com/viviendesbois-collab/site-boucherie-lefevre-223016",
+    "lastUpdated": "2026-06-29",
+    "stars": 0
+  },
+  {
+    "name": "site-pizzeria-test-210618",
+    "description": "Site client Pizzeria Test 210618 (Bloc 4 automation)",
+    "languages": [
+      "TypeScript",
+      "CSS",
+      "JavaScript"
+    ],
+    "url": "https://github.com/viviendesbois-collab/site-pizzeria-test-210618",
+    "lastUpdated": "2026-06-29",
+    "stars": 0
+  },
+  {
+    "name": "site-coiffure-antoine",
+    "description": "Site Coiffure Antoine — test E2E",
+    "languages": [
+      "TypeScript",
+      "CSS",
+      "JavaScript"
+    ],
+    "url": "https://github.com/viviendesbois-collab/site-coiffure-antoine",
+    "lastUpdated": "2026-06-29",
+    "stars": 0
+  },
+  {
+    "name": "courtier-credit-site",
+    "description": "Site courtier crédit bilingue (DEMO - ORIAS placeholder)",
+    "languages": [
+      "TypeScript",
+      "CSS",
+      "JavaScript"
+    ],
+    "url": "https://github.com/viviendesbois-collab/courtier-credit-site",
+    "lastUpdated": "2026-05-29",
+    "stars": 0
+  }
+]

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Construire ce portfolio avec Claude Code — MonPortfolio</title>
+  <meta name="description" content="Retour d'expérience sur la création d'un portfolio statique entièrement assisté par l'IA, sans framework ni bundler.">
+  <meta property="og:title" content="Construire ce portfolio avec Claude Code — MonPortfolio">
+  <meta property="og:description" content="Retour d'expérience sur la création d'un portfolio statique entièrement assisté par l'IA, sans framework ni bundler.">
+  <meta property="og:image" content="../assets/images/og-image.jpg">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- CSS critique (above-the-fold) en inline : le header s'affiche sans attendre css/style.css.
+       Copie exacte d'un sous-ensemble de css/style.css (liste précise des règles : voir le
+       commentaire en tête de ce fichier). Toute modification doit être répercutée ICI et dans
+       les 3 autres copies : index.html, blog.html, paiement.html. -->
+  <style>
+    :root {
+      --color-bg: #0a0a0a;
+      --color-surface: #141414;
+      --color-border: #262626;
+      --color-text: #e0e0e0;
+      --color-muted: #8a8a8a;
+      --color-accent: #64ffda;
+      --color-header-bg: rgba(10, 10, 10, 0.85);
+      --font-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --space-md: 1.5rem;
+      --header-height: 64px;
+      --max-width: 1080px;
+    }
+    :root[data-theme="light"] {
+      --color-bg: #ffffff;
+      --color-surface: #f5f5f5;
+      --color-border: #e2e2e2;
+      --color-text: #1a1a1a;
+      --color-muted: #5a5a5a;
+      --color-accent: #0a7a5e;
+      --color-header-bg: rgba(255, 255, 255, 0.8);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: var(--color-bg); color: var(--color-text); font-family: var(--font-base); font-size: 1.1rem; line-height: 1.7; }
+    .container { width: 100%; max-width: var(--max-width); margin: 0 auto; padding-inline: var(--space-md); }
+    .header { position: sticky; top: 0; z-index: 100; background-color: var(--color-header-bg); backdrop-filter: blur(8px); border-bottom: 1px solid var(--color-border); }
+    .header__inner { display: flex; align-items: center; gap: var(--space-md); height: var(--header-height); }
+    .header__logo { margin-right: auto; font-weight: 700; letter-spacing: 0.5px; }
+    .header__logo-accent { color: var(--color-accent); }
+  </style>
+  <link rel="preload" href="../css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="../css/style.css"></noscript>
+  <script>
+    // Applique le thème avant le rendu pour éviter tout flash (FOUC)
+    (function () {
+      const saved = localStorage.getItem("theme");
+      const theme = saved || (window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+</head>
+<body>
+  <!-- En-tête / navigation -->
+  <header class="header">
+    <div class="container header__inner">
+      <a href="../index.html" class="header__logo">Mon<span class="header__logo-accent">Portfolio</span></a>
+      <nav class="nav" id="site-nav">
+        <a href="../index.html#apropos" class="nav__link">À propos</a>
+        <a href="../index.html#projets" class="nav__link">Projets</a>
+        <a href="../index.html#actualites" class="nav__link">Actualités</a>
+        <a href="../blog.html" class="nav__link">Blog</a>
+        <a href="../index.html#contact" class="nav__link">Contact</a>
+      </nav>
+      <button class="theme-toggle" aria-pressed="false" aria-label="Activer le mode clair">
+        <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+        </svg>
+        <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      <button class="header__toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="site-nav"><span aria-hidden="true">☰</span></button>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="post">
+      <a href="../blog.html" class="post__back">← Retour au blog</a>
+      <h1 class="post__title">Construire ce portfolio avec Claude Code</h1>
+      <p class="post__date">20 juin 2026</p>
+
+      <div class="post__content">
+        <p>
+          Ce portfolio est volontairement minimaliste : du HTML sémantique, du CSS
+          organisé en BEM et un peu de JavaScript vanilla. Pas de framework, pas de
+          bundler. L'objectif était d'apprendre les fondamentaux du web tout en me
+          faisant assister par l'IA pour aller plus vite.
+        </p>
+
+        <h2>Pourquoi rester sur du vanilla ?</h2>
+        <p>
+          En formation, comprendre ce qui se passe « sous le capot » compte plus que
+          la rapidité de mise en place. Travailler sans abstraction m'oblige à
+          maîtriser le DOM, la cascade CSS et les variables, ou encore l'API
+          <code>IntersectionObserver</code> pour les animations au défilement.
+        </p>
+
+        <h2>Le rôle de Claude Code</h2>
+        <p>
+          Claude Code a servi de binôme : proposer une structure, expliquer chaque
+          choix avant de l'appliquer, et garder une cohérence (palette, espacements,
+          conventions de nommage) au fil des sections. Quelques exemples concrets :
+        </p>
+        <ul>
+          <li>une section Hero centrée et un système de cartes de projet réutilisable ;</li>
+          <li>un mode clair/sombre piloté uniquement par des variables CSS ;</li>
+          <li>un refactor pour extraire les valeurs « magiques » en tokens.</li>
+        </ul>
+
+        <h2>Et la suite ?</h2>
+        <p>
+          Ce blog en est la première brique : la liste est générée depuis un simple
+          fichier JSON, mais chaque article reste une vraie page HTML. Prochaine
+          étape : brancher les vrais liens et publier d'autres retours d'expérience.
+        </p>
+      </div>
+    </article>
+  </main>
+
+  <!-- Pied de page -->
+  <footer class="footer">
+    <div class="container">
+      <nav class="footer__links">
+        <a href="#" class="footer__link" target="_blank" rel="noopener" aria-label="GitHub (ouvre un nouvel onglet)">GitHub</a>
+        <a href="#" class="footer__link" target="_blank" rel="noopener" aria-label="LinkedIn (ouvre un nouvel onglet)">LinkedIn</a>
+      </nav>
+      <p>&copy; <span data-current-year>2026</span> Vivien Desbois — Construit avec Claude Code</p>
+    </div>
+  </footer>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

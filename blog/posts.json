@@ -1,0 +1,10 @@
+[
+  {
+    "slug": "construire-portfolio-avec-claude-code",
+    "title": "Construire ce portfolio avec Claude Code",
+    "date": "2026-06-20",
+    "excerpt": "Retour d'expérience sur la création d'un portfolio statique, entièrement assisté par l'IA, sans framework ni bundler.",
+    "tags": ["IA", "HTML", "CSS"],
+    "url": "blog/construire-portfolio-avec-claude-code.html"
+  }
+]
