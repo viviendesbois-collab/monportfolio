@@ -1,0 +1,120 @@
+# ============================================================================
+# Déploiement du portfolio statique sur GitHub Pages.
+#
+# À chaque push sur main : vérifications statiques (sans npm ni build — Node et
+# Python3 sont préinstallés sur le runner), puis déploiement via les actions
+# officielles GitHub Pages. Le site reste 100 % vanilla (cf. CLAUDE.md).
+# ============================================================================
+name: Déploiement GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Permissions minimales exigées par les actions officielles GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un seul déploiement Pages à la fois ; ne pas interrompre un déploiement en cours
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  verifications:
+    name: Vérifications statiques
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupération du code
+        uses: actions/checkout@v4
+
+      - name: index.html présent
+        run: test -f index.html
+
+      - name: Syntaxe JS (node --check)
+        run: |
+          find . -name '*.js' -not -path './.git/*' -print0 \
+            | xargs -0 -I{} -t node --check "{}"
+
+      - name: Syntaxe CSS (accolades et parenthèses équilibrées)
+        run: |
+          python3 - <<'PY'
+          import glob, re, sys
+          err = []
+          for c in glob.glob('**/*.css', recursive=True):
+              t = open(c, encoding='utf-8').read()
+              t = re.sub(r'/\*.*?\*/', '', t, flags=re.S)   # commentaires
+              t = re.sub(r'"[^"]*"|\'[^\']*\'', '', t)       # chaînes
+              if t.count('{') != t.count('}'):
+                  err.append(f"{c}: accolades déséquilibrées")
+              if t.count('(') != t.count(')'):
+                  err.append(f"{c}: parenthèses déséquilibrées")
+          print('\n'.join(err) or 'CSS OK')
+          sys.exit(1 if err else 0)
+          PY
+
+      - name: Validation HTML (pas de balises non fermées)
+        run: |
+          python3 - <<'PY'
+          import glob, sys
+          from html.parser import HTMLParser
+          VIDES = {'area','base','br','col','embed','hr','img','input',
+                   'link','meta','param','source','track','wbr'}
+
+          class Verif(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.pile = []
+                  self.orphelines = []
+              def handle_starttag(self, t, attrs):
+                  if t not in VIDES:
+                      self.pile.append((t, self.getpos()[0]))
+              def handle_endtag(self, t):
+                  if t in VIDES:
+                      return
+                  if self.pile and self.pile[-1][0] == t:
+                      self.pile.pop()
+                  elif any(x == t for x, _ in self.pile):
+                      while self.pile and self.pile[-1][0] != t:
+                          self.pile.pop()
+                      if self.pile:
+                          self.pile.pop()
+                  else:
+                      self.orphelines.append(f"</{t}> orpheline (ligne {self.getpos()[0]})")
+
+          err = []
+          for c in glob.glob('**/*.html', recursive=True):
+              v = Verif()
+              v.feed(open(c, encoding='utf-8').read())
+              for t, l in v.pile:
+                  err.append(f"{c}: <{t}> non fermé (ouvert ligne {l})")
+              err += [f"{c}: {p}" for p in v.orphelines]
+          print('\n'.join(err) or 'HTML OK')
+          sys.exit(1 if err else 0)
+          PY
+
+  deploiement:
+    name: Déploiement GitHub Pages
+    needs: verifications
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - name: Récupération du code
+        uses: actions/checkout@v4
+
+      - name: Configuration de GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Empaquetage du site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Déploiement sur GitHub Pages
+        id: deploiement
+        uses: actions/deploy-pages@v4
